@@ -1,11 +1,14 @@
 @import './base.css';
+@import '/node_modules/primeflex/primeflex.css';
 
 #app {
-  max-width: 1280px;
+  height: 100%;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
   font-weight: normal;
+  display: flex;
 }
+/*
 
 a,
 .green {
@@ -33,3 +36,4 @@ a,
     padding: 0 2rem;
   }
 }
+*/
