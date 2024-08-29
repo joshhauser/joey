@@ -1,13 +1,58 @@
 <script setup lang="ts">
-  import { RouterLink, RouterView } from 'vue-router';
-  import HelloWorld from './components/HelloWorld.vue';
-  import { Criterias } from '@/shared/models/criterias.model';
-  import { onMounted, ref } from 'vue';
+  import { ref } from 'vue';
   import { Client } from '@/shared/services/client';
-  import { Utils } from '@/shared/utils';
   import Form from '@/components/Form.vue';
+  import { Utils } from '@/shared/utils';
+  import type { ShowDetails } from '@/shared/models/show.model';
+  import ShowsList from '@/components/ShowsList.vue';
+  import ShowCard from '@/components/ShowCard.vue';
 
   const poster = ref<string | null>(null);
+  const shows = ref<ShowDetails[]>([]);
+  const isLoading = ref<boolean>(false);
+
+  const searchShows = (criterias: {}) => {
+    shows.value = [];
+    const promises: Promise<any>[] = [];
+    Client.getTvShows(criterias)
+      .then((showsResponse) => {
+        isLoading.value = true;
+        showsResponse.data.results.forEach((show) => {
+          const _promises: Promise<any>[] = [];
+          return Client.getShowDetails(show.id).then((showDetailsResponse) => {
+            showDetailsResponse.data = { ...showDetailsResponse.data, ...show };
+            if (showDetailsResponse.data.posterPath) {
+              const showPosterPromise = Client.getImage(showDetailsResponse.data.posterPath).then(
+                (posterResponse) => {
+                  showDetailsResponse.data.posterData = Utils.convertImageBuffer(posterResponse.data);
+                }
+              );
+              _promises.push(showPosterPromise);
+              promises.push(showPosterPromise);
+            }
+
+            const showProvidersPromise = Client.getShowProviders(show.id).then((showProvidersResponse) => {
+              const frenchProviders = showProvidersResponse.data.results['FR'];
+              if (frenchProviders) {
+                showDetailsResponse.data.providers = frenchProviders.flatrate;
+              }
+            });
+            _promises.push(showProvidersPromise);
+            promises.push(showProvidersPromise);
+
+            Promise.all(_promises).then(() => {
+              shows.value.push(showDetailsResponse.data);
+            });
+          });
+        });
+      })
+      .then(() => {
+        Promise.all(promises).then(() => {
+          console.log('salut');
+          isLoading.value = false;
+        });
+      });
+  };
 </script>
 
 <template>
@@ -31,7 +76,6 @@
       </template>
     </Card>
 
-    <img v-if="poster != null" alt="Poster" :src="poster" height="300" />
 
     &lt;!&ndash;    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -44,18 +88,33 @@
       </nav>
     </div>&ndash;&gt;
   </header>-->
-  <Form />
+
+  <div class="flex flex-column w-full">
+    <Form @searchShows="searchShows" />
+    <ShowsList v-if="!isLoading" :shows="shows" class="mt-4" />
+    <div v-else>
+      <div class="flex flex-column align-items-center container">
+        <div class="col-8">
+          <div class="grid gap-4 justify-content-start">
+            <div class="flex flex-column w-16rem" v-for="i in new Array(10).fill(0)" :key="i">
+              <div class="w-16rem">
+                <Skeleton class="w-full" />
+              </div>
+              <div class="w-100 show-title">
+                <Skeleton class="mt-2"></Skeleton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
   header {
     line-height: 1.5;
     max-height: 100vh;
-  }
-
-  .logo {
-    display: block;
-    margin: 0 auto 2rem;
   }
 
   nav {
@@ -65,10 +124,6 @@
     margin-top: 2rem;
   }
 
-  nav a.router-link-exact-active {
-    color: var(--color-text);
-  }
-
   nav a.router-link-exact-active:hover {
     background-color: transparent;
   }
@@ -76,7 +131,6 @@
   nav a {
     display: inline-block;
     padding: 0 1rem;
-    border-left: 1px solid var(--color-border);
   }
 
   nav a:first-of-type {
@@ -87,11 +141,6 @@
     header {
       display: flex;
       place-items: center;
-      padding-right: calc(var(--section-gap) / 2);
-    }
-
-    .logo {
-      margin: 0 2rem 0 0;
     }
 
     header .wrapper {

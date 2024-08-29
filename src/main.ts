@@ -17,6 +17,7 @@ import { useReferencesStore } from '@/shared/stores/references-store';
 import { Client } from '@/shared/services/client';
 import type { WatchProvider } from '@/shared/models/watch-provider.model';
 import { Utils } from '@/shared/utils';
+import Skeleton from 'primevue/skeleton';
 
 const app = createApp(App);
 
@@ -37,6 +38,7 @@ app.component('Card', Card);
 app.component('Select', Select);
 app.component('MultiSelect', MultiSelect);
 app.component('DatePicker', DatePicker);
+app.component('Skeleton', Skeleton);
 app.mount('#app');
 
 const referencesStore = useReferencesStore();
