@@ -1,5 +1,6 @@
 @import './base.css';
 @import '/node_modules/primeflex/primeflex.css';
+@import 'primeicons/primeicons.css';
 
 #app {
   height: 100vh;

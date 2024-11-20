@@ -23,7 +23,7 @@
 
 <style scoped lang="scss">
   .poster-container {
-    height: 460px;
+    height: 360px;
 
     .poster {
       width: 100%;

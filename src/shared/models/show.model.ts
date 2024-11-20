@@ -24,4 +24,6 @@ export interface ShowDetails extends Show {
 
 export interface ShowResponse {
   results: Show[];
+  totalPages: number;
+  page: number;
 }

@@ -27,7 +27,8 @@ export class Client {
       queryArgs += '&' + _.snakeCase(key) + '=' + value;
     }
 
-    queryArgs += '&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc';
+    queryArgs +=
+      '&include_null_first_air_dates=true&language=fr-FR&watch_region=FR&sort_by=vote_average.desc';
 
     const queryUrl: string = DISCOVER_SHOW_PATH + '?' + queryArgs.substring(1, queryArgs.length);
 

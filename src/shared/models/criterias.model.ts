@@ -13,6 +13,7 @@ export class Criterias {
   withRuntimeGte?: number;
   withWatchProviders?: string[];
   withType?: string[];
+  page?: number;
 
   constructor(
     firstAirDateYear?: number,
@@ -28,7 +29,8 @@ export class Criterias {
     withRuntimeLte?: number,
     withRuntimeGte?: number,
     withWatchProviders?: string[],
-    withType?: string[]
+    withType?: string[],
+    page?: number
   ) {
     this.firstAirDateYear = firstAirDateYear;
     this.includeAdult = includeAdult;
@@ -44,5 +46,6 @@ export class Criterias {
     this.withRuntimeGte = withRuntimeGte;
     this.withWatchProviders = withWatchProviders;
     this.withType = withType;
+    this.page = page ?? 1;
   }
 }

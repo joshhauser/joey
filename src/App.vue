@@ -9,14 +9,24 @@
 
   const poster = ref<string | null>(null);
   const shows = ref<ShowDetails[]>([]);
+  const currentPage = ref<number>(-1);
+  const totalPages = ref<number>(-1);
   const isLoading = ref<boolean>(false);
+  const searchCriterias = ref<{}>({});
 
   const searchShows = (criterias: {}) => {
+    searchCriterias.value = criterias;
     shows.value = [];
     const promises: Promise<any>[] = [];
     Client.getTvShows(criterias)
       .then((showsResponse) => {
         isLoading.value = true;
+        currentPage.value = showsResponse.data.page;
+        totalPages.value = showsResponse.data.totalPages;
+        console.log(showsResponse);
+        console.log(currentPage.value);
+        console.log(totalPages.value);
+
         showsResponse.data.results.forEach((show) => {
           const _promises: Promise<any>[] = [];
           return Client.getShowDetails(show.id).then((showDetailsResponse) => {
@@ -48,11 +58,24 @@
       })
       .then(() => {
         Promise.all(promises).then(() => {
-          console.log('salut');
           isLoading.value = false;
         });
       });
   };
+
+  const previousPage = () => {
+    if (currentPage.value > 1) {
+      searchShows({ ...searchCriterias.value, page: currentPage.value - 1 });
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage.value < totalPages.value) {
+      searchShows({ ...searchCriterias.value, page: currentPage.value + 1 });
+    }
+  };
+
+  const loadMore = () => {};
 </script>
 
 <template>
@@ -108,6 +131,21 @@
         </div>
       </div>
     </div>
+    <!--    <div class="flex justify-content-between w-2 align-self-center" v-if="shows && shows.length > 0">
+      <Button
+        label="Previous"
+        icon="pi pi-chevron-left"
+        :disabled="currentPage == 1"
+        @click="previousPage()"
+      />
+      <Button
+        label="Next"
+        icon="pi pi-chevron-right"
+        iconPos="right"
+        :disabled="currentPage == totalPages"
+        @click="nextPage()"
+      />
+    </div>-->
   </div>
 </template>
 
