@@ -1,0 +1,12 @@
+@import 'base.css';
+@import '/node_modules/primeflex/primeflex.css';
+@import '../../../node_modules/primeicons/primeicons.css';
+
+#app {
+  height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+  font-weight: normal;
+  display: flex;
+  overflow: hidden;
+}

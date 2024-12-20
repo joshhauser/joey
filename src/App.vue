@@ -1,11 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { ref } from 'vue';
   import { Client } from '@/shared/services/client';
   import Form from '@/components/Form.vue';
   import { Utils } from '@/shared/utils';
   import type { ShowDetails } from '@/shared/models/show.model';
   import ShowsList from '@/components/ShowsList.vue';
-  import ShowCard from '@/components/ShowCard.vue';
 
   const poster = ref<string | null>(null);
   const shows = ref<ShowDetails[]>([]);
@@ -29,7 +28,24 @@
 
         showsResponse.data.results.forEach((show) => {
           const _promises: Promise<any>[] = [];
-          return Client.getShowDetails(show.id).then((showDetailsResponse) => {
+          const showPosterPromise = Client.getImage(show.poster).then((posterResponse) => {
+            show = { ...show, posterData: Utils.convertImageBuffer(posterResponse.data) };
+          });
+          const showProvidersPromise = Client.getShowProviders(show.id).then((showProvidersResponse) => {
+            const frenchProviders = showProvidersResponse.data.results['FR'];
+            if (frenchProviders) {
+              show = { ...show, providers: frenchProviders.flatrate };
+            }
+          });
+          _promises.push(showProvidersPromise);
+          promises.push(showProvidersPromise);
+
+          Promise.all(_promises).then(() => {
+            shows.value.push(show);
+          });
+          _promises.push(showPosterPromise);
+          promises.push(showPosterPromise);
+          /*return Client.getShowDetails(show.id).then((showDetailsResponse) => {
             showDetailsResponse.data = { ...showDetailsResponse.data, ...show };
             if (showDetailsResponse.data.posterPath) {
               const showPosterPromise = Client.getImage(showDetailsResponse.data.posterPath).then(
@@ -53,7 +69,7 @@
             Promise.all(_promises).then(() => {
               shows.value.push(showDetailsResponse.data);
             });
-          });
+          });*/
         });
       })
       .then(() => {
@@ -119,7 +135,7 @@
       <div class="flex flex-column align-items-center container">
         <div class="col-8">
           <div class="grid gap-4 justify-content-start">
-            <div class="flex flex-column w-16rem" v-for="i in new Array(10).fill(0)" :key="i">
+            <div v-for="i in new Array(10).fill(0)" :key="i" class="flex flex-column w-16rem">
               <div class="w-16rem">
                 <Skeleton class="w-full" />
               </div>

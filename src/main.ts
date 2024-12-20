@@ -1,4 +1,5 @@
-import './assets/main.css';
+import './assets/styles/main.css';
+import '@/assets/styles/styles.scss';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
@@ -9,14 +10,15 @@ import router from './router';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import Card from 'primevue/card';
+import MultiSelect from 'primevue/multiselect';
 import Button from 'primevue/button';
 import Select from 'primevue/select';
-import MultiSelect from 'primevue/multiselect';
 import DatePicker from 'primevue/datepicker';
 import { useReferencesStore } from '@/shared/stores/references-store';
 import { Client } from '@/shared/services/client';
 import type { WatchProvider } from '@/shared/models/watch-provider.model';
 import { Utils } from '@/shared/utils';
+import FloatLabel from 'primevue/floatlabel';
 import Skeleton from 'primevue/skeleton';
 import ButtonGroup from 'primevue/buttongroup';
 
@@ -41,6 +43,8 @@ app.component('MultiSelect', MultiSelect);
 app.component('DatePicker', DatePicker);
 app.component('Skeleton', Skeleton);
 app.component('ButtonGroup', ButtonGroup);
+app.component('FloatLabel', FloatLabel);
+
 app.mount('#app');
 
 const referencesStore = useReferencesStore();

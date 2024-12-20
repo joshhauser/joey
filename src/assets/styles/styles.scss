@@ -1,0 +1,30 @@
+@use '@/assets/styles/variables' as vars;
+@use '@/assets/styles/fonts';
+
+html,
+body,
+input,
+.p-inputwrapper {
+  background: vars.$background !important;
+}
+
+input,
+.p-inputwrapper {
+  outline-color: vars.$joey-main-color !important;
+  border-color: vars.$joey-main-color !important;
+  border-radius: vars.$radius !important  ;
+}
+
+.bg-main {
+  background-color: vars.$joey-main-color;
+}
+
+.text-main {
+  color: vars.$joey-main-color;
+}
+
+.joey-title {
+  color: vars.$joey-main-color;
+  font-family: 'Gagalin', serif;
+  font-size: 48px;
+}
