@@ -23,9 +23,6 @@
         isLoading.value = true;
         currentPage.value = showsResponse.data.page;
         totalPages.value = showsResponse.data.totalPages;
-        console.log(showsResponse);
-        console.log(currentPage.value);
-        console.log(totalPages.value);
 
         showsResponse.data.results.forEach((show) => {
           const _promises: Promise<any>[] = [];
@@ -79,39 +76,6 @@
 </script>
 
 <template>
-  <!--  <header class="w-full h-full">
-    <Card style="width: 25rem; overflow: hidden">
-      <template #header> </template>
-      <template #title>Advanced Card</template>
-      <template #subtitle>Card subtitle</template>
-      <template #content>
-        <p class="m-0">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error
-          repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam
-          perferendis esse, cupiditate neque quas!
-        </p>
-      </template>
-      <template #footer>
-        <div class="flex gap-4 mt-1">
-          <Button label="Cancel" severity="secondary" outlined class="w-full" />
-          <Button label="Save" class="w-full" />
-        </div>
-      </template>
-    </Card>
-
-
-    &lt;!&ndash;    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>&ndash;&gt;
-  </header>-->
-
   <div class="flex flex-column w-full">
     <Form @searchShows="searchShows" />
     <ShowsList v-if="!isLoading" :shows="shows" class="mt-4" />
@@ -131,21 +95,6 @@
         </div>
       </div>
     </div>
-    <!--    <div class="flex justify-content-between w-2 align-self-center" v-if="shows && shows.length > 0">
-      <Button
-        label="Previous"
-        icon="pi pi-chevron-left"
-        :disabled="currentPage == 1"
-        @click="previousPage()"
-      />
-      <Button
-        label="Next"
-        icon="pi pi-chevron-right"
-        iconPos="right"
-        :disabled="currentPage == totalPages"
-        @click="nextPage()"
-      />
-    </div>-->
   </div>
 </template>
 
